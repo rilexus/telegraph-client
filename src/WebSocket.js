@@ -39,7 +39,7 @@ const useConnectionState = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [state]);
+  }, [state, socket]);
 
   return state;
 };

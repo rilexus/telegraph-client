@@ -161,7 +161,6 @@ function App() {
           <Route path={"/"} element={<Home />} />
           <Route path={"/chat"} element={<Chat />} />
           <Route path={'*'} element={<Navigate to={'/'} />}/>
-
         </Routes>
       )}
     </div>
