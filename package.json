@@ -2,20 +2,49 @@
   "name": "telegraph",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "start": "node serve.js",
+    "dev": "webpack serve --config webpack/webpack.config.js --env development",
+    "build": "webpack --config webpack/webpack.config.js --env production"
+  },
   "dependencies": {
+    "express": "^4.17.3",
+    "socket.io-client": "^4.4.1",
+    "react-router-dom": "^6.3.0",
+    "dotenv": "^16.0.0",
+    "assert": "^2.0.0",
+    "process": "^0.11.10",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-scripts": "5.0.0",
-    "web-vitals": "^2.1.4"
+    "uuid": "^8.3.2",
+    "web-vitals": "^2.1.4",
+    "styled-components": "^5.3.3",
+    "crypto-browserify": "^3.12.0",
+    "https-browserify": "^1.0.0",
+    "ipfs-http-client": "^56.0.1",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+  "devDependencies": {
+    "serve": "^13.0.2",
+    "prettier": "^2.6.2",
+    "@types/uuid": "^8.3.4",
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.7.4",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.16.5",
+    "@babel/preset-react": "^7.16.5",
+    "@babel/runtime": "^7.16.5",
+    "babel-loader": "^8.2.3",
+    "eslint-plugin-react": "^7.27.1",
+    "eslint-plugin-react-hooks": "^4.3.0"
   },
   "eslintConfig": {
     "extends": [
