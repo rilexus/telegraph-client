@@ -29,6 +29,8 @@ const useConnectionState = () => {
   const socket = useSocket();
   const [state, setState] = useState(false);
 
+  console.log(`Connected: ${state}`);
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (state !== socket.connected) {
