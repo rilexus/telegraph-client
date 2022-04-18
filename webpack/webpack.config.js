@@ -45,57 +45,66 @@ module.exports = ({ development, production }) => {
 
   const alias = getAlias();
 
-
   console.log('Packages in the "src" folder can be accessed with: ');
   Object.keys(alias).forEach((name) => {
     console.log(`import {x, y, z} from "${name}"`);
   });
 
-  return {
-    entry: ["@babel/polyfill", "./src/index.js"],
-    mode,
-    module: {
-      rules: [
-        {
-          test: /\.(ts|js)x?$/,
-          exclude: /node_modules/,
-          use: {
-            loader: "babel-loader",
-            options: {
-              presets: ["@babel/preset-env", "@babel/preset-react"],
+  return [
+    {
+      target: "node",
+      entry: {
+        serve: `${rootPath}/serve.js`,
+      },
+      output: {
+        path: path.resolve(rootPath, "build"),
+        // filename: "[name].js", => name is set in the entry prop
+        filename: "[name].js",
+      },
+    },
+    {
+      target: "web",
+      entry: {
+        bundle: `${rootPath}/src/index.js`,
+      },
+      mode,
+      module: {
+        rules: [
+          {
+            test: /\.(ts|js)x?$/,
+            exclude: /node_modules/,
+            use: {
+              loader: "babel-loader",
+              options: {
+                presets: ["@babel/preset-env", "@babel/preset-react"],
+                plugins: [["@babel/transform-runtime"]],
+              },
             },
           },
-        },
+        ],
+      },
+      resolve: {
+        fallback: {},
+        alias: alias,
+        extensions: [".js"],
+      },
+      output: {
+        path: path.resolve(rootPath, "build/public"),
+        // filename: "[name].js", => name is set in the entry prop
+        filename: "[name].js",
+      },
+      devServer: devServer,
+
+      plugins: [
+        new ProvidePlugin({
+          Buffer: ["buffer", "Buffer"],
+        }),
+        new ProvidePlugin({
+          process: "process/browser",
+        }),
+        new HtmlWebpackPlugin({ template: "./public/index.html" }),
+        new EnvironmentPlugin(env),
       ],
     },
-    resolve: {
-      fallback: {
-        path: require.resolve("path-browserify"),
-        stream: require.resolve("stream-browserify"),
-        os: require.resolve("os-browserify/browser"),
-        https: require.resolve("https-browserify"),
-        http: require.resolve("stream-http"),
-        crypto: require.resolve("crypto-browserify"),
-        assert: require.resolve("assert/"),
-      },
-      alias: alias,
-      extensions: [".js"],
-    },
-    output: {
-      path: path.resolve(rootPath, BUILD_FOLDER),
-      filename: "bundle.js",
-    },
-    devServer: devServer,
-
-    plugins: [
-      new ProvidePlugin({
-        Buffer: ["buffer", "Buffer"],
-      }),
-      new ProvidePlugin({
-        process: "process/browser",
-      }),
-      new HtmlWebpackPlugin({ template: "./public/index.html" }),
-      new EnvironmentPlugin(env),
-    ],
-  };
+  ];
 };

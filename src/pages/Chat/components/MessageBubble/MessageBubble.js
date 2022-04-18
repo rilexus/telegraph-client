@@ -19,7 +19,7 @@ const MessageBubble = ({ value, date, own }) => {
         <div
           style={{
             padding: ".5rem",
-            backgroundColor: own ? "blue" : "gray",
+            backgroundColor: own ? "#3eaaf5" : "#e5e5ea",
             fontSize: "1rem",
             textAlign: own ? "right" : "left",
             color: own ? "white" : "black",

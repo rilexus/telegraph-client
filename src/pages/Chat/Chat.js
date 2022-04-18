@@ -1,9 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useId, useMessage, useSend, useSocket } from "../../WebSocket";
+import React, { useEffect, useState } from "react";
+import { useId, useMessage, useSend } from "../../WebSocket";
 import { useSearchParams } from "react-router-dom";
 import { useInput } from "telegraph-hooks";
 import { v4 as generateId } from "uuid";
 import { useChannels } from "../../ChannelProvider";
+import { Board } from "./components";
+import { Center } from "@nightfall-ui/layout";
 
 const useChat = () => {
   const [messages, setMessages] = useState([]);
@@ -52,12 +54,18 @@ const Chat = () => {
   }, []);
 
   return (
-    <div>
+    <Center
+      small={95}
+      tablet={90}
+      laptop={50}
+      desktop={40}
+      style={{
+        height: "100vh",
+      }}
+    >
       <div>CHAT</div>
       <div>
-        {messages.map((m) => {
-          return <div key={m.id}>{m.value}</div>;
-        })}
+        <Board messages={messages} />
       </div>
       <div>
         <input
@@ -72,6 +80,7 @@ const Chat = () => {
                 value: messageInput.value,
                 date: new Date().toISOString(),
                 id: generateId(),
+                sender: ownId,
               });
 
               messageInput.onChange({ target: { value: "" } });
@@ -79,7 +88,7 @@ const Chat = () => {
           }}
         />
       </div>
-    </div>
+    </Center>
   );
 };
 

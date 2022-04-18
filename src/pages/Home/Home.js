@@ -1,15 +1,13 @@
-import React, { useEffect } from "react";
-import { useInput } from "telegraph-hooks";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useMessage, useSend, useSocket } from "../../WebSocket";
+import { useMessage, useSend } from "../../WebSocket";
+import { Footnote, LargeTitle } from "@nightfall-ui/typography";
+import { Button } from "@nightfall-ui/buttons";
+import { Center } from "@nightfall-ui/layout";
 
 const Home = () => {
-  const offerInput = useInput({ name: "offerInput", initialValue: "" });
-
   const navigate = useNavigate();
   const send = useSend();
-  const socket = useSocket();
-  const ownId = socket.id;
 
   useMessage("new-room", (message) => {
     const {
@@ -25,36 +23,28 @@ const Home = () => {
 
   return (
     <div>
-      <h1>Telegraph Chat</h1>
-      <div>
-        <div
-          style={{
-            marginBottom: "3rem",
-          }}
-        >
-          <input type="text" {...offerInput} placeholder={"Chat ID"} />
-          <button
-            disabled={!offerInput.value}
-            onClick={() => {
-              console.log("NOT IMPLEMENTED!");
-            }}
-          >
-            JOIN CHAT
-          </button>
-        </div>
-        <div>or</div>
+      <Center small={95} tablet={90} laptop={50} desktop={40}>
+        <LargeTitle as={"h1"} type={"primary"} weight={"bold"}>
+          Telegraph Chat
+        </LargeTitle>
+        <Footnote type={"primary"} weight={"regular"}>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur
+          consequuntur debitis dicta eaque, fuga laboriosam laborum non pariatur
+          quis tempore ullam velit. Amet eos error ipsum nobis saepe vel vitae!
+        </Footnote>
         <div>
-          <button
-            disabled={!!offerInput.value}
+          <Button
+            shape={"oval"}
+            size={"extra-large"}
             style={{
               marginRight: "1rem",
             }}
             onClick={handleCreateChat}
           >
-            CREATE CHAT
-          </button>
+            Create Chat
+          </Button>
         </div>
-      </div>
+      </Center>
     </div>
   );
 };

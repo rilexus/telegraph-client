@@ -1,30 +1,16 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useConnectionState } from "./WebSocket";
 import { Chat, Home } from "telegraph-pages";
-
+import { useAudioDevices, useVideoDevices } from "telegraph-hooks";
+import { ThemeProvider } from "@nightfall-ui/theme";
 import { Routes, Route, Navigate } from "react-router-dom";
+import { Spinner } from "@nightfall-ui/icons";
+import { Footnote } from "@nightfall-ui/typography";
 
 const openMediaDevices = async (constraints) => {
   return await navigator.mediaDevices.getUserMedia(constraints);
 };
-
-const DEVICE_INPUT_TYPES = {
-  VIDEO: "videoinput",
-  AUDIO: "audioinput",
-};
-async function getConnectedDevices(type) {
-  const devices = await navigator.mediaDevices.enumerateDevices();
-  return devices.filter((device) => device.kind === type);
-}
-
-async function getVideoDevices() {
-  return getConnectedDevices(DEVICE_INPUT_TYPES.VIDEO);
-}
-
-async function getAudioDevices() {
-  return getConnectedDevices(DEVICE_INPUT_TYPES.AUDIO);
-}
 
 // Open camera with at least minWidth and minHeight capabilities
 async function openCamera(cameraId, minWidth = 640, minHeight = 480) {
@@ -47,43 +33,6 @@ const requestPermission = async () => {
   } catch (e) {
     return false;
   }
-};
-
-const useDevices = (type) => {
-  const [inputs, setInputs] = useState([]);
-
-  useEffect(() => {
-    getConnectedDevices(type)
-      .then((devices) => {
-        setInputs(devices);
-      })
-      .catch((e) => {
-        console.error(e);
-      });
-
-    const handleNewDevices = () => {
-      const newCameraList = getConnectedDevices(type);
-      setInputs(newCameraList);
-    };
-
-    // Listen for changes to media devices and update the list accordingly
-    navigator.mediaDevices.addEventListener("devicechange", handleNewDevices);
-    return () => {
-      navigator.mediaDevices.removeEventListener(
-        "devicechange",
-        handleNewDevices
-      );
-    };
-  }, []);
-  return inputs;
-};
-
-const useVideoDevices = () => {
-  return useDevices(DEVICE_INPUT_TYPES.VIDEO);
-};
-
-const useAudioDevices = () => {
-  return useDevices(DEVICE_INPUT_TYPES.AUDIO);
 };
 
 function VideoDeviceSelect({ onSelect, value }) {
@@ -156,13 +105,27 @@ function App() {
 
   return (
     <div className="App">
-      {isConnected && (
-        <Routes>
-          <Route path={"/"} element={<Home />} />
-          <Route path={"/chat"} element={<Chat />} />
-          <Route path={'*'} element={<Navigate to={'/'} />}/>
-        </Routes>
-      )}
+      <ThemeProvider>
+        {!isConnected && (
+          <div>
+            <div>
+              <Spinner />
+            </div>
+            <div>
+              <Footnote type={"primary"} weight={"regular"}>
+                Connecting
+              </Footnote>
+            </div>
+          </div>
+        )}
+        {isConnected && (
+          <Routes>
+            <Route path={"/"} element={<Home />} />
+            <Route path={"/chat"} element={<Chat />} />
+            <Route path={"*"} element={<Navigate to={"/"} />} />
+          </Routes>
+        )}
+      </ThemeProvider>
     </div>
   );
 }

@@ -76,7 +76,7 @@ const useMessage = (type, handler) => {
 };
 
 const socket = io(SOCKET);
-console.log({ SOCKET });
+
 const WebSocketProvider = ({ children }) => {
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
