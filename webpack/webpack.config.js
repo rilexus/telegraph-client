@@ -1,5 +1,6 @@
 //eslint-disable-next-line
 const path = require("path");
+//eslint-disable-next-line
 const fs = require("fs");
 //eslint-disable-next-line
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -7,10 +8,11 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { EnvironmentPlugin, ProvidePlugin } = require("webpack");
 //eslint-disable-next-line
 require("dotenv").config({ path: ".env" });
-
+//eslint-disable-next-line
 const devServer = require("./webpack.dev-server");
 
 const BUILD_FOLDER = "build";
+//eslint-disable-next-line
 const { getENV, createAlias } = require("./utils");
 
 const getRootFolderPath = () => {
@@ -51,17 +53,20 @@ module.exports = ({ development, production }) => {
   });
 
   return [
-    {
-      target: "node",
-      entry: {
-        serve: `${rootPath}/serve.js`,
-      },
-      output: {
-        path: path.resolve(rootPath, "build"),
-        // filename: "[name].js", => name is set in the entry prop
-        filename: "[name].js",
-      },
-    },
+    mode === "production"
+      ? {
+          target: "node",
+          mode,
+          entry: {
+            serve: `${rootPath}/serve.js`,
+          },
+          output: {
+            path: path.resolve(rootPath, "build"),
+            // filename: "[name].js", => name is set in the entry prop
+            filename: "[name].js",
+          },
+        }
+      : null,
     {
       target: "web",
       entry: {
@@ -106,5 +111,5 @@ module.exports = ({ development, production }) => {
         new EnvironmentPlugin(env),
       ],
     },
-  ];
+  ].filter(Boolean);
 };

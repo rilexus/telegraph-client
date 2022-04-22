@@ -1,6 +1,7 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 const useInput = ({ name, initialValue, ...rest }) => {
+  const inputRef = useRef(null);
   const [value, setValue] = useState(initialValue);
 
   const handleChange = useCallback((e) => {
@@ -10,6 +11,7 @@ const useInput = ({ name, initialValue, ...rest }) => {
 
   return {
     ...rest,
+    ref: inputRef,
     value,
     name,
     onChange: handleChange,
