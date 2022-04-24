@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useEffect } from "react";
 import { useConnectionState } from "./WebSocket";
-import { Chat, Home } from "telegraph-pages";
 import { useAudioDevices, useVideoDevices } from "telegraph-hooks";
 import { ThemeProvider } from "@nightfall-ui/theme";
-import { Routes, Route, Navigate } from "react-router-dom";
+
+import { useScrollVelocity } from "./hooks";
 import { Spinner } from "@nightfall-ui/icons";
 import { Footnote } from "@nightfall-ui/typography";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { Chat, Home } from "./pages";
 
 const openMediaDevices = async (constraints) => {
   return await navigator.mediaDevices.getUserMedia(constraints);

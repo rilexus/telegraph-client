@@ -9,6 +9,13 @@ import { Center, Flex } from "@nightfall-ui/layout";
 import { TransitionGroup } from "react-transition-group";
 import { MessageBubble } from "./components/MessageBubble";
 import { Transition } from "react-transitions-library";
+import { useScrollVelocity } from "../../hooks";
+import {
+  HeavyScrollInertia,
+  LightScrollInertia,
+  NormalScrollInertia,
+} from "../../components";
+import { Title1 } from "@nightfall-ui/typography";
 
 const useChat = () => {
   const [messages, setMessages] = useState([]);
@@ -136,6 +143,8 @@ const MessageEnterTransition = ({ x, y, ...props }) => {
 
 const Chat = () => {
   const [params] = useSearchParams();
+  const ref = useRef(null);
+  const velocity = useScrollVelocity(ref);
   const send = useSend();
   const messageInput = useInput({ name: "message-input", initialValue: "" });
   const ownId = useId();
@@ -172,7 +181,9 @@ const Chat = () => {
         height: "100vh",
       }}
     >
-      <div>CHAT</div>
+      <Title1 type={"primary"} weight={"bold"}>
+        CHAT
+      </Title1>
 
       <Flex
         direction={"column"}
@@ -184,6 +195,7 @@ const Chat = () => {
         }}
       >
         <div
+          ref={ref}
           style={{
             overflowY: "scroll",
             width: "100%",
@@ -191,23 +203,21 @@ const Chat = () => {
           }}
         >
           {messages.map((m) => {
+            const Inertia = LightScrollInertia;
             return (
-              <div
-                key={m.id}
-                style={{
-                  textAlign: "right",
-                }}
-              >
+              <Flex justify={m.sender === ownId ? "end" : "start"} key={m.id}>
                 <TransitionGroup>
                   <MessageEnterTransition x={-inputRect?.x} y={inputRect?.y}>
-                    <MessageBubble
-                      value={m.value}
-                      date={m.date}
-                      own={id === m.sender}
-                    />
+                    <Inertia velocity={velocity}>
+                      <MessageBubble
+                        value={m.value}
+                        date={m.date}
+                        own={id === m.sender}
+                      />
+                    </Inertia>
                   </MessageEnterTransition>
                 </TransitionGroup>
-              </div>
+              </Flex>
             );
           })}
         </div>
