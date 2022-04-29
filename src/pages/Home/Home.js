@@ -4,10 +4,13 @@ import { useMessage, useSend } from "../../WebSocket";
 import { Footnote, LargeTitle } from "@nightfall-ui/typography";
 import { Button } from "@nightfall-ui/buttons";
 import { Center } from "@nightfall-ui/layout";
+import { Input } from "@nightfall-ui/inputs";
+import { useForm } from "../../hooks";
 
 const Home = () => {
   const navigate = useNavigate();
   const send = useSend();
+  const { values: formValues, handleSubmit, ref } = useForm();
 
   useMessage("new-room", (message) => {
     const {
@@ -17,7 +20,7 @@ const Home = () => {
     navigate(`/chat?chatid=${roomId}`);
   });
 
-  const handleCreateChat = () => {
+  const onSubmit = () => {
     send({ type: "create-room" });
   };
 
@@ -25,25 +28,31 @@ const Home = () => {
     <div>
       <Center small={95} tablet={90} laptop={50} desktop={40}>
         <LargeTitle as={"h1"} type={"primary"} weight={"bold"}>
-          Telegraph Chat
+          Telegraph
         </LargeTitle>
         <Footnote type={"primary"} weight={"regular"}>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur
           consequuntur debitis dicta eaque, fuga laboriosam laborum non pariatur
           quis tempore ullam velit. Amet eos error ipsum nobis saepe vel vitae!
         </Footnote>
-        <div>
-          <Button
-            shape={"oval"}
-            size={"extra-large"}
-            style={{
-              marginRight: "1rem",
-            }}
-            onClick={handleCreateChat}
-          >
-            Create Chat
-          </Button>
-        </div>
+        <form ref={ref} onSubmit={handleSubmit(onSubmit)}>
+          <div>
+            <Input name={"name"} placeholder={"Name"} />
+          </div>
+          <div>
+            <Button
+              type={"submit"}
+              disabled={!formValues.name}
+              shape={"oval"}
+              size={"extra-large"}
+              style={{
+                marginRight: "1rem",
+              }}
+            >
+              Create Chat
+            </Button>
+          </div>
+        </form>
       </Center>
     </div>
   );
